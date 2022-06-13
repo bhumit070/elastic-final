@@ -45,19 +45,20 @@ function createSearchPayload(search) {
 		}
 	}
 	for (const key in search) {
-		searchQuery.bool.should.push({
-			term: {
-				[key]: search[key]
-			}
-		})
+		if (search[key]) {
+			searchQuery.bool.should.push({
+				term: {
+					[key]: search[key]
+				}
+			})
+		}
 	}
 	return searchQuery
 }
 
 app.post('/data', async (req, res) => {
 	try {
-		const { size = 1000, from = 0, search } = req.body;
-
+		const { size = 10, from = 0, search } = req.body;
 
 		const searchQuery = createSearchPayload(search)
 
@@ -84,7 +85,7 @@ app.post('/data', async (req, res) => {
 	}
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 
 app.listen(PORT, () => {
 	console.log(`APP is running @ ${PORT}`);
